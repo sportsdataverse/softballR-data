@@ -4,4 +4,4 @@ devtools::install_github("tmking2002/softballR")
 
 scoreboard <- softballR::get_espn_season_scoreboard(2023)
 
-saveRDS(object = scoreboard, file = "data/Current Season Scoreboard.RDS")
+saveRDS(object = scoreboard, file = "data/espn_scoreboard_2023.RDS")
