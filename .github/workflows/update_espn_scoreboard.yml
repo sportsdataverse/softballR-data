@@ -8,11 +8,10 @@ on:
 jobs:
   update-scoreboard-db:
     runs-on: macOS-latest
+    env: ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@v2
       - name: Update current season ESPN scoreboard
-        with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: Rscript get_current_season_espn_scoreboard.R
     
