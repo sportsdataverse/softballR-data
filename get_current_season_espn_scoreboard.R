@@ -1,3 +1,4 @@
+install.packages("devtools")
 library(devtools)
 
 devtools::install_github("tmking2002/softballR")
