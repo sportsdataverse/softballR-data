@@ -1,7 +1,7 @@
 install.packages("devtools", repos = "http://cran.us.r-project.org")
 library(devtools)
 
-devtools::install_github("tmking2002/softballR")
+source_url("https://raw.githubusercontent.com/tmking2002/softballR/main/R/get_espn_season_scoreboard.R")
 
 scoreboard <- softballR::get_espn_season_scoreboard(2023)
 
