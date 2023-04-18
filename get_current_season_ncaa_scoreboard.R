@@ -131,10 +131,8 @@ get_ncaa_scoreboard <- function(date){
 
 }
 
-get_ncaa_season_scoreboard <- function(season, division = "D1"){
+get_ncaa_season_scoreboard <- function(season){
   options(warn = -1)
-
-  if(!(division %in% c("D1", "D2", "D3"))) stop("Invalid Division")
 
   s <- try(as.numeric(season))
 
@@ -153,7 +151,7 @@ get_ncaa_season_scoreboard <- function(season, division = "D1"){
 
   dates <- seq(start_date,min(end_date,Sys.Date()-1),1)
 
-  scoreboard <- do.call(rbind, lapply(X = dates, FUN = get_ncaa_scoreboard, division = division))
+  scoreboard <- do.call(rbind, lapply(X = dates, FUN = get_ncaa_scoreboard))
 
   return(scoreboard)
 }
