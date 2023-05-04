@@ -20,5 +20,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
-          git commit -m "Update NCAA Scoreboard" -a || echo "No changes to commit."
+          git commit -m "Update NCAA Player Box" -a || echo "No changes to commit."
           git push origin main || "No changes to commit."
