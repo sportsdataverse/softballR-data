@@ -90,8 +90,6 @@ get_ncaa_hitter_player_box <- function(game_id){
   
   hitting <- try(get_hitting_box(game_id))
   
-  if(i %% 100 == 0) {toc(); tic(i+100)}
-  
   return(hitting)
   
 }
@@ -102,8 +100,6 @@ get_ncaa_pitcher_player_box <- function(game_id){
   
   pitching <- try(get_pitching_box(game_id))
   
-  if(i %% 100 == 0) {toc(); tic(i+100)}
-  
   return(pitching)
   
 }
@@ -112,9 +108,7 @@ get_ncaa_pitcher_player_box <- function(game_id){
 
 i <- 0
 
-tic(100)
 box <- do.call(rbind, lapply(X = game_ids, FUN = get_ncaa_hitter_player_box))
-toc()
 
 box <- box %>% 
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>% 
@@ -129,9 +123,7 @@ saveRDS(object = hitting_box, file = "data/d1_hitting_box_scores_2023.RDS")
 
 i <- 0
 
-tic(100)
 box <- do.call(rbind, lapply(X = game_ids, FUN = get_ncaa_pitcher_player_box))
-toc()
 
 box <- box %>% 
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>% 
