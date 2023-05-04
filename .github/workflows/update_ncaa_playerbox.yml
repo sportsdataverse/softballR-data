@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-scoreboard-db:
+  update-playerbox-db:
     runs-on: macOS-latest
     env: 
       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

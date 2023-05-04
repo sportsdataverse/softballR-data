@@ -1,8 +1,17 @@
 install.packages("tidyverse")
 library(tidyverse)
 
+install.packages("janitor")
+library(janitor)
+
+install.packages("rvest")
+library(rvest)
+
 install.packages("anytime")
 library(anytime)
+
+install.packages("glue")
+library(glue)
 
 options(warn = -1)
 
