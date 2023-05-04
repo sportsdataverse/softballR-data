@@ -156,6 +156,7 @@ get_ncaa_season_scoreboard <- function(season){
   return(scoreboard)
 }
 
-scoreboard <- get_ncaa_season_scoreboard(2023)
+scoreboard <- get_ncaa_season_scoreboard(2023) %>% 
+  distinct()
 
 saveRDS(object = scoreboard, file = "data/ncaa_scoreboard_2023.RDS")
