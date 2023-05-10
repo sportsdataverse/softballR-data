@@ -10,13 +10,15 @@ library(rvest)
 library(magrittr)
 library(stringr)
 
-get_ncaa_scoreboard <- function(date){
+ncaa_softball_scoreboard <- function(date, division = "D1"){
 
   if(as.Date(date) >= Sys.Date()){
     stop("Invalid Date")
   }
 
-  if(class(date) != "Date"){
+  if(!(division %in% c("D1", "D2", "D3"))) stop("Invalid Division")
+
+  if(!(is(date, "Date"))){
 
     year <- try(strsplit(date, "-")[[1]][1])
     month <- try(strsplit(date, "-")[[1]][2])
@@ -30,17 +32,25 @@ get_ncaa_scoreboard <- function(date){
 
   }
 
-  division_id <- dplyr::case_when(year == 2023 ~ 18101,
-                                  year == 2022 ~ 17840,
-                                  year == 2021 ~ 15620,
-                                  year == 2020 ~ 15220,
-                                  year == 2019 ~ 16820)
+  if((division != "D1" & year != 2023)) stop("Invalid Date")
+
+  division_id <- dplyr::case_when(division == "D1" & year == 2023 ~ 18101,
+                                  division == "D1" & year == 2022 ~ 17840,
+                                  division == "D1" & year == 2021 ~ 17540,
+                                  division == "D1" & year == 2020 ~ 17103,
+                                  division == "D1" & year == 2019 ~ 16820,
+                                  division == "D1" & year == 2018 ~ 15196,
+                                  division == "D1" & year == 2017 ~ 13300,
+                                  division == "D2" & year == 2023 ~ 18102,
+                                  division == "D3" & year == 2023 ~ 18103)
 
 
-  raw <- paste0("https://stats.ncaa.org/season_divisions/",division_id,"/livestream_scoreboards?utf8=%E2%9C%93&season_division_id=&game_date=",month,"%2F",day,"%2F",year) %>%
+  raw <- glue::glue("https://stats.ncaa.org/season_divisions/{division_id}/livestream_scoreboards?utf8=%E2%9C%93&season_division_id=&game_date={month}%2F{day}%2F{year}&conference_id=0&tournament_id=&commit=Submit") %>%
     readLines()
 
   locs <- grep("<tr id=\"", raw)
+
+  if(length(locs) == 0) return(NULL)
 
   assemble_df <- function(loc, next_loc){
 
@@ -125,18 +135,22 @@ get_ncaa_scoreboard <- function(date){
     dplyr::filter(away_team_runs != "") %>%
     dplyr::mutate(home_team_runs = as.numeric(home_team_runs),
                   away_team_runs = as.numeric(away_team_runs),
-                  game_date = stringr::str_remove_all(game_date, " \\(1\\)| \\(2\\)"))
+                  game_date = stringr::str_remove_all(game_date, " \\(1\\)| \\(2\\)")) %>%
+    dplyr::distinct()
+
+  print(paste0(date, ": completed"))
 
   return(games_df)
 
 }
-
-get_ncaa_season_scoreboard <- function(season){
+ncaa_softball_season_scoreboard <- function(season, division = "D1"){
   options(warn = -1)
+
+  if(!(division %in% c("D1", "D2", "D3"))) stop("Invalid Division")
 
   s <- try(as.numeric(season))
 
-  if("try-error" %in% class(s) || is.na(s) || s < 2019 || s > 2023){
+  if("try-error" %in% class(s) || is.na(s) || s < 2017 || s > 2023){
     stop("Invalid Season")
   }
 
@@ -151,12 +165,18 @@ get_ncaa_season_scoreboard <- function(season){
 
   dates <- seq(start_date,min(end_date,Sys.Date()-1),1)
 
-  scoreboard <- do.call(rbind, lapply(X = dates, FUN = get_ncaa_scoreboard))
+  scoreboard <- do.call(rbind, lapply(X = dates, FUN = ncaa_softball_scoreboard, division = division)) %>%
+    dplyr::distinct()
 
   return(scoreboard)
 }
 
-scoreboard <- get_ncaa_season_scoreboard(2023) %>% 
-  distinct()
+scoreboard_d1 <- ncaa_softball_season_scoreboard(season = 2023, division = "D1")
 
-saveRDS(object = scoreboard, file = "data/ncaa_scoreboard_2023.RDS")
+scoreboard_d2 <- ncaa_softball_season_scoreboard(season = 2023, division = "D2")
+
+scoreboard_d3 <- ncaa_softball_season_scoreboard(season = 2023, division = "D3")
+
+saveRDS(object = scoreboard_d1, file = "data/ncaa_scoreboard_2023.RDS")
+saveRDS(object = scoreboard_d2, file = "data/ncaa_scoreboard_D2_2023.RDS")
+saveRDS(object = scoreboard_d3, file = "data/ncaa_scoreboard_D3_2023.RDS")
