@@ -31,4 +31,7 @@ for(i in 1:nrow(team_ids)){
 
 }
 
-saveRDS(info, file = "~/Projects/softballR-data/data/ncaa_team_info.RDS")
+info_final <- info %>% 
+  merge(team_ids, by = "team_id")
+
+saveRDS(info_final, file = "~/Projects/softballR-data/data/ncaa_team_info.RDS")
