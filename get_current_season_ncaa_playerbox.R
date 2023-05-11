@@ -83,7 +83,7 @@ curr_pitching_box_d2 <- readRDS("data/d2_pitching_box_scores_2023.RDS")
 
 
 url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2023.RDS?raw=true")
-url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_d2_2023.RDS?raw=true")
+url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D2_2023.RDS?raw=true")
 
 
 con <- url(url_d1)
@@ -101,8 +101,8 @@ scoreboard_d2 <- try(readRDS(con), silent = TRUE) %>%
   distinct(game_id, game_date)
 
 
-most_recent <- min(c(max(anydate(curr_hitting_box$game_date)),
-                     max(anydate(curr_pitching_box$game_date))))
+most_recent <- min(c(max(anydate(curr_hitting_box_d1$game_date)),
+                     max(anydate(curr_pitching_box_d1$game_date))))
 
 game_ids_d1 <- scoreboard_d1 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
 game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
