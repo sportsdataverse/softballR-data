@@ -84,6 +84,7 @@ curr_pitching_box_d2 <- readRDS("data/d2_pitching_box_scores_2023.RDS")
 
 url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2023.RDS?raw=true")
 url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D2_2023.RDS?raw=true")
+url_d3 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D3_2023.RDS?raw=true")
 
 
 con <- url(url_d1)
@@ -100,12 +101,20 @@ on.exit(close(con))
 scoreboard_d2 <- try(readRDS(con), silent = TRUE) %>%
   distinct(game_id, game_date)
 
+con <- url(url_d3)
+
+on.exit(close(con))
+
+scoreboard_d3 <- try(readRDS(con), silent = TRUE) %>%
+  distinct(game_id, game_date)
+
 
 most_recent <- min(c(max(anydate(curr_hitting_box_d1$game_date)),
                      max(anydate(curr_pitching_box_d1$game_date))))
 
 game_ids_d1 <- scoreboard_d1 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
 game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
+game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
 
 get_ncaa_hitter_player_box <- function(game_id){
 
@@ -155,6 +164,19 @@ hitting_box_d2 <- rbind(curr_hitting_box_d2, box) %>%
 
 saveRDS(object = hitting_box_d2, file = "data/d2_hitting_box_scores_2023.RDS")
 
+i <- 0
+
+box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_hitter_player_box))
+
+box <- box %>%
+  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+  merge(scoreboard_d3, by = "game_id")
+
+hitting_box_d3 <- rbind(curr_hitting_box_d3, box) %>%
+  distinct()
+
+saveRDS(object = hitting_box_d3, file = "data/d3_hitting_box_scores_2023.RDS")
+
 # Pitcher box scores
 
 i <- 0
@@ -182,3 +204,16 @@ pitching_box_d2 <- rbind(curr_pitching_box_d2, box) %>%
   distinct()
 
 saveRDS(object = pitching_box_d2, file = "data/d2_pitching_box_scores_2023.RDS")
+
+i <- 0
+
+box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_pitcher_player_box))
+
+box <- box %>%
+  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+  merge(scoreboard_d3, by = "game_id")
+
+pitching_box_d3 <- rbind(curr_pitching_box_d3, box) %>%
+  distinct()
+
+saveRDS(object = pitching_box_d3, file = "data/d3_pitching_box_scores_2023.RDS")
