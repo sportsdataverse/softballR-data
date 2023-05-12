@@ -75,11 +75,14 @@ get_hitting_box <- function(id){
 
 }
 
-curr_hitting_box_d1 <- readRDS("data/d1_hitting_box_scores_2023.RDS")
-curr_pitching_box_d1 <- readRDS("data/d1_pitching_box_scores_2023.RDS")
+curr_hitting_box_d1 <- readRDS("data/D1_hitting_box_scores_2023.RDS")
+curr_pitching_box_d1 <- readRDS("data/D1_pitching_box_scores_2023.RDS")
 
-curr_hitting_box_d2 <- readRDS("data/d2_hitting_box_scores_2023.RDS")
-curr_pitching_box_d2 <- readRDS("data/d2_pitching_box_scores_2023.RDS")
+curr_hitting_box_d2 <- readRDS("data/D2_hitting_box_scores_2023.RDS")
+curr_pitching_box_d2 <- readRDS("data/D2_pitching_box_scores_2023.RDS")
+
+curr_hitting_box_d3 <- readRDS("data/D3_hitting_box_scores_2023.RDS")
+curr_pitching_box_d3 <- readRDS("data/D3_pitching_box_scores_2023.RDS")
 
 
 url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2023.RDS?raw=true")
@@ -149,7 +152,7 @@ box <- box %>%
 hitting_box_d1 <- rbind(curr_hitting_box_d1, box) %>%
   distinct()
 
-saveRDS(object = hitting_box_d1, file = "data/d1_hitting_box_scores_2023.RDS")
+saveRDS(object = hitting_box_d1, file = "data/D1_hitting_box_scores_2023.RDS")
 
 i <- 0
 
@@ -162,7 +165,7 @@ box <- box %>%
 hitting_box_d2 <- rbind(curr_hitting_box_d2, box) %>%
   distinct()
 
-saveRDS(object = hitting_box_d2, file = "data/d2_hitting_box_scores_2023.RDS")
+saveRDS(object = hitting_box_d2, file = "data/D2_hitting_box_scores_2023.RDS")
 
 i <- 0
 
@@ -175,7 +178,7 @@ box <- box %>%
 hitting_box_d3 <- rbind(curr_hitting_box_d3, box) %>%
   distinct()
 
-saveRDS(object = hitting_box_d3, file = "data/d3_hitting_box_scores_2023.RDS")
+saveRDS(object = hitting_box_d3, file = "data/D3_hitting_box_scores_2023.RDS")
 
 # Pitcher box scores
 
@@ -190,7 +193,7 @@ box <- box %>%
 pitching_box_d1 <- rbind(curr_pitching_box_d1, box) %>%
   distinct()
 
-saveRDS(object = pitching_box_d1, file = "data/d1_pitching_box_scores_2023.RDS")
+saveRDS(object = pitching_box_d1, file = "data/D1_pitching_box_scores_2023.RDS")
 
 i <- 0
 
@@ -203,7 +206,7 @@ box <- box %>%
 pitching_box_d2 <- rbind(curr_pitching_box_d2, box) %>%
   distinct()
 
-saveRDS(object = pitching_box_d2, file = "data/d2_pitching_box_scores_2023.RDS")
+saveRDS(object = pitching_box_d2, file = "data/D2_pitching_box_scores_2023.RDS")
 
 i <- 0
 
@@ -216,4 +219,4 @@ box <- box %>%
 pitching_box_d3 <- rbind(curr_pitching_box_d3, box) %>%
   distinct()
 
-saveRDS(object = pitching_box_d3, file = "data/d3_pitching_box_scores_2023.RDS")
+saveRDS(object = pitching_box_d3, file = "data/D3_pitching_box_scores_2023.RDS")
