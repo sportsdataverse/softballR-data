@@ -189,7 +189,7 @@ box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_fielding_player_box
 
 box <- box %>%
   filter(!str_detect(Player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard, by = "game_id")
+  merge(scoreboard_d1, by = "game_id")
 
 fielding_box <- box %>%
   distinct()
