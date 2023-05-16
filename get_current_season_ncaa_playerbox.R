@@ -191,7 +191,7 @@ box <- box %>%
   filter(!str_detect(Player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d1, by = "game_id")
 
-fielding_box <- box %>%
+fielding_box <- rbind(curr_fielding_box_d1, box) %>%
   distinct()
 
 saveRDS(object = fielding_box, file = "data/d1_fielding_box_scores_2023.RDS")
