@@ -98,6 +98,83 @@ ncaa_softball_pbp <- function(game_id){
 
 }
 
+load_ncaa_softball_scoreboard <- function(season, division = "D1"){
+
+  if(!is.numeric(season)) return("Invalid Input")
+
+  if(!(division %in% c("D1", "D2", "D3"))) stop("Invalid Division")
+
+  if(min(season) < 2016 | max(season) > 2023) stop("Invalid Season")
+
+  if(length(season) == 1){
+
+    if(division == "D1"){
+
+      url <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_{season}.RDS?raw=true")
+
+    } else{
+
+      url <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_{division}_{season}.RDS?raw=true")
+
+    }
+
+    con <- url(url)
+
+    on.exit(close(con))
+
+    scoreboard <- try(readRDS(con), silent = TRUE)
+
+  } else{
+
+    scoreboard <- data.frame()
+
+    for(i in 1:length(season)){
+
+      if(division == "D1"){
+
+        url <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_{season[i]}.RDS?raw=true")
+
+      } else{
+
+        url <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_{division}_{season[i]}.RDS?raw=true")
+
+      }
+
+      con <- url(url)
+
+      on.exit(close(con))
+
+      scoreboard <- rbind(scoreboard, try(readRDS(con), silent = TRUE))
+    }
+
+  }
+
+  return(scoreboard)
+
+}
+
+load_ncaa_softball_pbp <- function(season, division = "D1"){
+
+  if(!is.numeric(season)) stop("Invalid Input")
+
+  if(season != 2023) stop("Invalid Season")
+
+  if(!(division %in% c("D1", "D2", "D3"))) stop("Invalid division")
+
+  division_id <- stringr::str_replace(division, "D", "d")
+
+  url <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/{division_id}_ncaa_pbp_{season}.RDS?raw=true")
+
+  con <- url(url)
+
+  on.exit(close(con))
+
+  scoreboard <- try(readRDS(con), silent = TRUE)
+
+  return(scoreboard)
+
+}
+
 d1_scoreboard <- load_ncaa_softball_scoreboard(2023, division = "D1") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
 d2_scoreboard <- load_ncaa_softball_scoreboard(2023, division = "D2") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
 d3_scoreboard <- load_ncaa_softball_scoreboard(2023, division = "D3") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
