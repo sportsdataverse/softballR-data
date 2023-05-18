@@ -195,23 +195,32 @@ d2_games <- d2_scoreboard %>%
 d3_games <- d3_scoreboard %>%
   filter(game_date > most_recent)
 
-for(i in 1:nrow(d1_games)){
+if(nrow(d1_games > 0)){
+  for(i in 1:nrow(d1_games)){
 
-  d1_pbp <- rbind(d1_pbp, ncaa_softball_pbp(d1_games$game_id[i]))
+    d1_pbp <- rbind(d1_pbp, ncaa_softball_pbp(d1_games$game_id[i]) %>%
+                      mutate(game_date = d1_games$game_date[i]))
 
-}
-
-for(i in 1:nrow(d2_games)){
-
-  d2_pbp <- rbind(d2_pbp, ncaa_softball_pbp(d2_games$game_id[i]) %>%
-                    mutate(game_date = d2_games$game_date))
+  }
 
 }
 
-for(i in 1:nrow(d3_games)){
+if(nrow(d2_games) > 0){
+  for(i in 1:nrow(d2_games)){
 
-  d3_pbp <- rbind(d3_pbp, ncaa_softball_pbp(d3_games$game_id[i]) %>%
-                    mutate(game_date = d3_games$game_date))
+    d2_pbp <- rbind(d2_pbp, ncaa_softball_pbp(d2_games$game_id[i]) %>%
+                      mutate(game_date = d2_games$game_date[i]))
+
+  }
+}
+
+if(nrow(d3_games) > 0){
+  for(i in 1:nrow(d3_games)){
+
+    d3_pbp <- rbind(d3_pbp, ncaa_softball_pbp(d3_games$game_id[i]) %>%
+                      mutate(game_date = d3_games$game_date[i]))
+
+  }
 
 }
 
