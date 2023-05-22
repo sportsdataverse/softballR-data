@@ -144,12 +144,20 @@ scoreboard_d3 <- try(readRDS(con), silent = TRUE) %>%
   distinct(game_id, game_date)
 
 
-most_recent <- min(c(max(anydate(curr_hitting_box_d1$game_date)),
+most_recent_d1 <- min(c(max(anydate(curr_hitting_box_d1$game_date)),
                      max(anydate(curr_pitching_box_d1$game_date))))
 
-game_ids_d1 <- scoreboard_d1 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
-game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
-game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent) %>%  pull(game_id) %>% sort
+most_recent_d2 <- min(c(max(anydate(curr_hitting_box_d2$game_date)),
+                        max(anydate(curr_pitching_box_d2$game_date))))
+
+
+most_recent_d3 <- min(c(max(anydate(curr_hitting_box_d3$game_date)),
+                        max(anydate(curr_pitching_box_d3$game_date))))
+
+
+game_ids_d1 <- scoreboard_d1 %>% filter(anydate(game_date) > most_recent_d1) %>%  pull(game_id) %>% sort
+game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent_d2) %>%  pull(game_id) %>% sort
+game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent_d3) %>%  pull(game_id) %>% sort
 
 get_ncaa_hitter_player_box <- function(game_id){
 
@@ -191,8 +199,10 @@ box <- box %>%
   filter(!str_detect(Player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d1, by = "game_id")
 
-fielding_box <- rbind(curr_fielding_box_d1, box) %>%
-  distinct()
+if(nrow(box) > 0){
+  fielding_box <- rbind(curr_fielding_box_d1, box) %>%
+    distinct()
+}
 
 saveRDS(object = fielding_box, file = "data/d1_fielding_box_scores_2023.RDS")
 
@@ -206,8 +216,11 @@ box <- box %>%
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d1, by = "game_id")
 
-hitting_box_d1 <- rbind(curr_hitting_box_d1, box) %>%
-  distinct()
+if(nrow(box) > 0){
+  hitting_box_d1 <- rbind(curr_hitting_box_d1, box) %>%
+    distinct()
+}
+
 
 saveRDS(object = hitting_box_d1, file = "data/D1_hitting_box_scores_2023.RDS")
 
@@ -219,8 +232,10 @@ box <- box %>%
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d2, by = "game_id")
 
-hitting_box_d2 <- rbind(curr_hitting_box_d2, box) %>%
-  distinct()
+if(nrow(box) > 0){
+  hitting_box_d2 <- rbind(curr_hitting_box_d2, box) %>%
+    distinct()
+}
 
 saveRDS(object = hitting_box_d2, file = "data/D2_hitting_box_scores_2023.RDS")
 
@@ -232,8 +247,10 @@ box <- box %>%
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d3, by = "game_id")
 
-hitting_box_d3 <- rbind(curr_hitting_box_d3, box) %>%
-  distinct()
+if(nrow(box) > 0){
+  hitting_box_d3 <- rbind(curr_hitting_box_d3, box) %>%
+    distinct()
+}
 
 saveRDS(object = hitting_box_d3, file = "data/D3_hitting_box_scores_2023.RDS")
 
@@ -247,8 +264,10 @@ box <- box %>%
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d1, by = "game_id")
 
-pitching_box_d1 <- rbind(curr_pitching_box_d1, box) %>%
-  distinct()
+if(nrow(box) > 0){
+  pitching_box_d1 <- rbind(curr_pitching_box_d1, box) %>%
+    distinct()
+}
 
 saveRDS(object = pitching_box_d1, file = "data/D1_pitching_box_scores_2023.RDS")
 
@@ -260,8 +279,10 @@ box <- box %>%
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d2, by = "game_id")
 
-pitching_box_d2 <- rbind(curr_pitching_box_d2, box) %>%
-  distinct()
+if(nrow(box) > 0){
+  pitching_box_d2 <- rbind(curr_pitching_box_d2, box) %>%
+    distinct()
+}
 
 saveRDS(object = pitching_box_d2, file = "data/D2_pitching_box_scores_2023.RDS")
 
@@ -273,7 +294,9 @@ box <- box %>%
   filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
   merge(scoreboard_d3, by = "game_id")
 
-pitching_box_d3 <- rbind(curr_pitching_box_d3, box) %>%
-  distinct()
+if(nrow(box) > 0){
+  pitching_box_d3 <- rbind(curr_pitching_box_d3, box) %>%
+    distinct()
+}
 
 saveRDS(object = pitching_box_d3, file = "data/D3_pitching_box_scores_2023.RDS")
