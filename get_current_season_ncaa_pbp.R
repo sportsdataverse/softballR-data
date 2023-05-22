@@ -204,7 +204,7 @@ if(nrow(d1_games > 0)){
     
     if(!(is.null(curr_pbp))){
      
-      d1_pbp <- rbind(d1_pbp, ncaa_softball_pbp(d1_games$game_id[i]) %>%
+      d1_pbp <- rbind(d1_pbp, curr_pbp %>%
                         mutate(game_date = d1_games$game_date[i]))
        
     }
@@ -216,11 +216,11 @@ if(nrow(d1_games > 0)){
 if(nrow(d2_games) > 0){
   for(i in 1:nrow(d2_games)){
 
-    curr_pbp <- ncaa_softball_pbp(d1_games$game_id[i])
+    curr_pbp <- ncaa_softball_pbp(d2_games$game_id[i])
     
     if(!(is.null(curr_pbp))){
       
-      d2_pbp <- rbind(d2_pbp, ncaa_softball_pbp(d2_games$game_id[i]) %>%
+      d2_pbp <- rbind(d2_pbp, curr_pbp %>%
                         mutate(game_date = d2_games$game_date[i]))
       
     }
@@ -230,11 +230,11 @@ if(nrow(d2_games) > 0){
 if(nrow(d3_games) > 0){
   for(i in 1:nrow(d3_games)){
 
-    curr_pbp <- ncaa_softball_pbp(d1_games$game_id[i])
+    curr_pbp <- ncaa_softball_pbp(d3_games$game_id[i])
     
     if(!(is.null(curr_pbp))){
       
-      d3_pbp <- rbind(d3_pbp, ncaa_softball_pbp(d3_games$game_id[i]) %>%
+      d3_pbp <- rbind(d3_pbp, curr_pbp %>%
                         mutate(game_date = d3_games$game_date[i]))
       
     }
