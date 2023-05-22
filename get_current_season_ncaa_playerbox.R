@@ -195,16 +195,17 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_fielding_player_box))
 
-box <- box %>%
-  filter(!str_detect(Player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard_d1, by = "game_id")
-
 if(nrow(box) > 0){
+  
+  box <- box %>%
+    filter(!str_detect(Player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+    merge(scoreboard_d1, by = "game_id")
+  
   fielding_box <- rbind(curr_fielding_box_d1, box) %>%
     distinct()
+  
+  saveRDS(object = fielding_box, file = "data/d1_fielding_box_scores_2023.RDS")
 }
-
-saveRDS(object = fielding_box, file = "data/d1_fielding_box_scores_2023.RDS")
 
 # Hitter box scores
 
@@ -212,47 +213,53 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_hitter_player_box))
 
-box <- box %>%
-  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard_d1, by = "game_id")
 
 if(nrow(box) > 0){
+  
+  box <- box %>%
+    filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+    merge(scoreboard_d1, by = "game_id")
+  
   hitting_box_d1 <- rbind(curr_hitting_box_d1, box) %>%
     distinct()
+  
+  saveRDS(object = hitting_box_d1, file = "data/D1_hitting_box_scores_2023.RDS")
 }
 
-
-saveRDS(object = hitting_box_d1, file = "data/D1_hitting_box_scores_2023.RDS")
 
 i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d2, FUN = get_ncaa_hitter_player_box))
 
-box <- box %>%
-  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard_d2, by = "game_id")
+
 
 if(nrow(box) > 0){
+  
+  box <- box %>%
+    filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+    merge(scoreboard_d2, by = "game_id")
+  
   hitting_box_d2 <- rbind(curr_hitting_box_d2, box) %>%
     distinct()
+  
+  saveRDS(object = hitting_box_d2, file = "data/D2_hitting_box_scores_2023.RDS")
 }
-
-saveRDS(object = hitting_box_d2, file = "data/D2_hitting_box_scores_2023.RDS")
 
 i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_hitter_player_box))
 
-box <- box %>%
-  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard_d3, by = "game_id")
-
 if(nrow(box) > 0){
+  
+  box <- box %>%
+    filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+    merge(scoreboard_d3, by = "game_id")
+  
   hitting_box_d3 <- rbind(curr_hitting_box_d3, box) %>%
     distinct()
+  
+  saveRDS(object = hitting_box_d3, file = "data/D3_hitting_box_scores_2023.RDS")
 }
-
-saveRDS(object = hitting_box_d3, file = "data/D3_hitting_box_scores_2023.RDS")
 
 # Pitcher box scores
 
@@ -260,43 +267,48 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_pitcher_player_box))
 
-box <- box %>%
-  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard_d1, by = "game_id")
-
 if(nrow(box) > 0){
+
+  box <- box %>%
+    filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+    merge(scoreboard_d1, by = "game_id")
+  
   pitching_box_d1 <- rbind(curr_pitching_box_d1, box) %>%
     distinct()
-}
+  
+  saveRDS(object = pitching_box_d1, file = "data/D1_pitching_box_scores_2023.RDS")
 
-saveRDS(object = pitching_box_d1, file = "data/D1_pitching_box_scores_2023.RDS")
+}
 
 i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d2, FUN = get_ncaa_pitcher_player_box))
 
-box <- box %>%
-  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard_d2, by = "game_id")
-
 if(nrow(box) > 0){
+  
+  box <- box %>%
+    filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+    merge(scoreboard_d2, by = "game_id")
+  
   pitching_box_d2 <- rbind(curr_pitching_box_d2, box) %>%
     distinct()
+  
+  saveRDS(object = pitching_box_d2, file = "data/D2_pitching_box_scores_2023.RDS")
 }
 
-saveRDS(object = pitching_box_d2, file = "data/D2_pitching_box_scores_2023.RDS")
+
 
 i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_pitcher_player_box))
 
-box <- box %>%
-  filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-  merge(scoreboard_d3, by = "game_id")
-
 if(nrow(box) > 0){
+  box <- box %>%
+    filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
+    merge(scoreboard_d3, by = "game_id")
+  
   pitching_box_d3 <- rbind(curr_pitching_box_d3, box) %>%
     distinct()
+  
+  saveRDS(object = pitching_box_d3, file = "data/D3_pitching_box_scores_2023.RDS")
 }
-
-saveRDS(object = pitching_box_d3, file = "data/D3_pitching_box_scores_2023.RDS")

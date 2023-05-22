@@ -50,6 +50,8 @@ ncaa_softball_pbp <- function(game_id){
     rvest::read_html() %>%
     rvest::html_table()
 
+  if(length(raw) == 0) return(NULL)
+  
   upd <- raw[(5:length(raw))][c(F,T)]
 
   df <- do.call(rbind, upd)
@@ -61,8 +63,6 @@ ncaa_softball_pbp <- function(game_id){
 
   opponent_name <- df[1,3] %>% as.character()
   opponent_col <- 3
-
-  if(is.null(df)) return(NULL)
   
   filtered <- df %>%
     dplyr::rename(team = team_col, opponent = opponent_col) %>%
@@ -199,9 +199,15 @@ d3_games <- d3_scoreboard %>%
 
 if(nrow(d1_games > 0)){
   for(i in 1:nrow(d1_games)){
-
-    d1_pbp <- rbind(d1_pbp, ncaa_softball_pbp(d1_games$game_id[i]) %>%
-                      mutate(game_date = d1_games$game_date[i]))
+    
+    curr_pbp <- ncaa_softball_pbp(d1_games$game_id[i])
+    
+    if(!(is.null(curr_pbp))){
+     
+      d1_pbp <- rbind(d1_pbp, ncaa_softball_pbp(d1_games$game_id[i]) %>%
+                        mutate(game_date = d1_games$game_date[i]))
+       
+    }
 
   }
 
@@ -210,17 +216,28 @@ if(nrow(d1_games > 0)){
 if(nrow(d2_games) > 0){
   for(i in 1:nrow(d2_games)){
 
-    d2_pbp <- rbind(d2_pbp, ncaa_softball_pbp(d2_games$game_id[i]) %>%
-                      mutate(game_date = d2_games$game_date[i]))
-
+    curr_pbp <- ncaa_softball_pbp(d1_games$game_id[i])
+    
+    if(!(is.null(curr_pbp))){
+      
+      d2_pbp <- rbind(d2_pbp, ncaa_softball_pbp(d2_games$game_id[i]) %>%
+                        mutate(game_date = d2_games$game_date[i]))
+      
+    }
   }
 }
 
 if(nrow(d3_games) > 0){
   for(i in 1:nrow(d3_games)){
 
-    d3_pbp <- rbind(d3_pbp, ncaa_softball_pbp(d3_games$game_id[i]) %>%
-                      mutate(game_date = d3_games$game_date[i]))
+    curr_pbp <- ncaa_softball_pbp(d1_games$game_id[i])
+    
+    if(!(is.null(curr_pbp))){
+      
+      d3_pbp <- rbind(d3_pbp, ncaa_softball_pbp(d3_games$game_id[i]) %>%
+                        mutate(game_date = d3_games$game_date[i]))
+      
+    }
 
   }
 
