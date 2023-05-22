@@ -195,7 +195,7 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_fielding_player_box))
 
-if(nrow(box) > 0){
+if(!(is.null(box))){
   
   box <- box %>%
     filter(!str_detect(Player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
@@ -214,7 +214,7 @@ i <- 0
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_hitter_player_box))
 
 
-if(nrow(box) > 0){
+if(!(is.null(box))){
   
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
@@ -233,7 +233,7 @@ box <- do.call(rbind, lapply(X = game_ids_d2, FUN = get_ncaa_hitter_player_box))
 
 
 
-if(nrow(box) > 0){
+if(!(is.null(box))){
   
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
@@ -249,7 +249,7 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_hitter_player_box))
 
-if(nrow(box) > 0){
+if(!(is.null(box))){
   
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
@@ -267,7 +267,7 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_pitcher_player_box))
 
-if(nrow(box) > 0){
+if(!(is.null(box))){
 
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
@@ -284,7 +284,7 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d2, FUN = get_ncaa_pitcher_player_box))
 
-if(nrow(box) > 0){
+if(!(is.null(box))){
   
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
@@ -302,7 +302,7 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_pitcher_player_box))
 
-if(nrow(box) > 0){
+if(!(is.null(box))){
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
     merge(scoreboard_d3, by = "game_id")
