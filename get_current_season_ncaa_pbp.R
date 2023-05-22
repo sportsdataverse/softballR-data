@@ -62,6 +62,8 @@ ncaa_softball_pbp <- function(game_id){
   opponent_name <- df[1,3] %>% as.character()
   opponent_col <- 3
 
+  if(nrow(df) == 0) return(NULL)
+  
   filtered <- df %>%
     dplyr::rename(team = team_col, opponent = opponent_col) %>%
     tidyr::separate(Score, c("away_team_runs", "home_team_runs"), sep = "-") %>%
