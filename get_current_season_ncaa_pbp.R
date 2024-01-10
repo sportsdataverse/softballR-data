@@ -177,14 +177,16 @@ load_ncaa_softball_pbp <- function(season, division = "D1"){
 
 }
 
-d1_scoreboard <- load_ncaa_softball_scoreboard(2023, division = "D1") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
-d2_scoreboard <- load_ncaa_softball_scoreboard(2023, division = "D2") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
-d3_scoreboard <- load_ncaa_softball_scoreboard(2023, division = "D3") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
+cur_season <- get_cur_season()
+
+d1_scoreboard <- load_ncaa_softball_scoreboard(cur_season, division = "D1") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
+d2_scoreboard <- load_ncaa_softball_scoreboard(cur_season, division = "D2") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
+d3_scoreboard <- load_ncaa_softball_scoreboard(cur_season, division = "D3") %>% mutate(game_date = stringr::word(game_date, 1, 3, sep = "/| |<"))
 
 
-d1_pbp <- load_ncaa_softball_pbp(2023, division = "D1")
-d2_pbp <- load_ncaa_softball_pbp(2023, division = "D2")
-d3_pbp <- load_ncaa_softball_pbp(2023, division = "D3")
+d1_pbp <- load_ncaa_softball_pbp(cur_season, division = "D1")
+d2_pbp <- load_ncaa_softball_pbp(cur_season, division = "D2")
+d3_pbp <- load_ncaa_softball_pbp(cur_season, division = "D3")
 
 most_recent <- max(c(d1_pbp$game_date, d2_pbp$game_date, d3_pbp$game_date))
 
@@ -243,6 +245,6 @@ if(nrow(d3_games) > 0){
 
 }
 
-saveRDS(d1_pbp, "data/d1_ncaa_pbp_2023.RDS")
-saveRDS(d2_pbp, "data/d2_ncaa_pbp_2023.RDS")
-saveRDS(d3_pbp, "data/d3_ncaa_pbp_2023.RDS")
+saveRDS(d1_pbp, glue("data/d1_ncaa_pbp_{cur_season}.RDS"))
+saveRDS(d2_pbp, glue("data/d2_ncaa_pbp_{cur_season}.RDS"))
+saveRDS(d3_pbp, glue("data/d3_ncaa_pbp_{cur_season}.RDS"))
