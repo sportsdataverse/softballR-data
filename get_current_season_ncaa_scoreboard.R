@@ -32,7 +32,8 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
 
   }
 
-  division_id <- dplyr::case_when(division == "D1" & year == 2023 ~ 18101,
+  division_id <- dplyr::case_when(division == "D1" & year == 2024 ~ 18261,
+                                  division == "D1" & year == 2023 ~ 18101,
                                   division == "D1" & year == 2022 ~ 17840,
                                   division == "D1" & year == 2021 ~ 17540,
                                   division == "D1" & year == 2020 ~ 17103,
@@ -40,6 +41,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
                                   division == "D1" & year == 2018 ~ 15196,
                                   division == "D1" & year == 2017 ~ 13300,
                                   division == "D1" & year == 2016 ~ 12981,
+                                  division == "D2" & year == 2024 ~ 18264,
                                   division == "D2" & year == 2023 ~ 18102,
                                   division == "D2" & year == 2022 ~ 17841,
                                   division == "D2" & year == 2021 ~ 17541,
@@ -48,6 +50,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
                                   division == "D2" & year == 2018 ~ 15197,
                                   division == "D2" & year == 2017 ~ 13301,
                                   division == "D2" & year == 2016 ~ 12980,
+                                  division == "D3" & year == 2024 ~ 18265,
                                   division == "D3" & year == 2023 ~ 18103,
                                   division == "D3" & year == 2022 ~ 17842,
                                   division == "D3" & year == 2021 ~ 17542,
@@ -170,8 +173,8 @@ ncaa_softball_season_scoreboard <- function(season, division = "D1"){
   }
 
   seasons <- data.frame(season = 2015:2023,
-                        start_date = c("2015-02-05","2016-02-11","2017-02-09","2018-02-08","2019-02-07","2020-02-06","2021-02-11","2022-02-10","2023-02-09"),
-                        end_date = c("2015-06-03","2016-06-08","2017-06-07","2018-06-06","2019-06-04","2020-03-12","2021-06-10","2022-06-09","2023-06-09")) #Go back and fix after season
+                        start_date = c("2015-02-05","2016-02-11","2017-02-09","2018-02-08","2019-02-07","2020-02-06","2021-02-11","2022-02-10","2023-02-09", "2024-02-08"),
+                        end_date = c("2015-06-03","2016-06-08","2017-06-07","2018-06-06","2019-06-04","2020-03-12","2021-06-10","2022-06-09","2023-06-09", "2024-06-09")) #Go back and fix after season
 
   start_date <- seasons %>% dplyr::filter(season == s) %>% dplyr::select(start_date) %>% as.character() %>% as.Date()
   end_date <- seasons %>% dplyr::filter(season == s) %>% dplyr::select(end_date) %>% as.character() %>% as.Date()
@@ -318,15 +321,15 @@ naia_softball_season_scoreboard <- function(season){
 }
 
 
-scoreboard_d1 <- ncaa_softball_season_scoreboard(season = 2023, division = "D1")
+scoreboard_d1 <- ncaa_softball_season_scoreboard(season = 2024, division = "D1")
 
-scoreboard_d2 <- ncaa_softball_season_scoreboard(season = 2023, division = "D2")
+scoreboard_d2 <- ncaa_softball_season_scoreboard(season = 2024, division = "D2")
 
-scoreboard_d3 <- ncaa_softball_season_scoreboard(season = 2023, division = "D3")
+scoreboard_d3 <- ncaa_softball_season_scoreboard(season = 2024, division = "D3")
 
-scoreboard_naia <- naia_softball_season_scoreboard(season = 2023)
+scoreboard_naia <- naia_softball_season_scoreboard(season = 2024)
 
-saveRDS(object = scoreboard_d1, file = "data/ncaa_scoreboard_2023.RDS")
-saveRDS(object = scoreboard_d2, file = "data/ncaa_scoreboard_D2_2023.RDS")
-saveRDS(object = scoreboard_d3, file = "data/ncaa_scoreboard_D3_2023.RDS")
-saveRDS(object = scoreboard_naia, file = "data/naia_scoreboard_2023.RDS")
+saveRDS(object = scoreboard_d1, file = "data/ncaa_scoreboard_2024.RDS")
+saveRDS(object = scoreboard_d2, file = "data/ncaa_scoreboard_D2_2024.RDS")
+saveRDS(object = scoreboard_d3, file = "data/ncaa_scoreboard_D3_2024.RDS")
+saveRDS(object = scoreboard_naia, file = "data/naia_scoreboard_2024.RDS")
