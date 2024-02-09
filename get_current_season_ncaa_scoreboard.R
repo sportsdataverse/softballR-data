@@ -172,7 +172,7 @@ ncaa_softball_season_scoreboard <- function(season, division = "D1"){
     stop("Invalid Season")
   }
 
-  seasons <- data.frame(season = 2015:2023,
+  seasons <- data.frame(season = 2015:2024,
                         start_date = c("2015-02-05","2016-02-11","2017-02-09","2018-02-08","2019-02-07","2020-02-06","2021-02-11","2022-02-10","2023-02-09", "2024-02-08"),
                         end_date = c("2015-06-03","2016-06-08","2017-06-07","2018-06-06","2019-06-04","2020-03-12","2021-06-10","2022-06-09","2023-06-09", "2024-06-09")) #Go back and fix after season
 
@@ -190,12 +190,18 @@ ncaa_softball_season_scoreboard <- function(season, division = "D1"){
 }
 
 
-scoreboard_d1 <- ncaa_softball_season_scoreboard(season = 2024, division = "D1")
+scoreboard_d1 <- try(ncaa_softball_season_scoreboard(season = 2024, division = "D1"))
 
-scoreboard_d2 <- ncaa_softball_season_scoreboard(season = 2024, division = "D2")
+scoreboard_d2 <- try(ncaa_softball_season_scoreboard(season = 2024, division = "D2"))
 
-scoreboard_d3 <- ncaa_softball_season_scoreboard(season = 2024, division = "D3")
+scoreboard_d3 <- try(ncaa_softball_season_scoreboard(season = 2024, division = "D3"))
 
-saveRDS(object = scoreboard_d1, file = "data/ncaa_scoreboard_2024.RDS")
-saveRDS(object = scoreboard_d2, file = "data/ncaa_scoreboard_D2_2024.RDS")
-saveRDS(object = scoreboard_d3, file = "data/ncaa_scoreboard_D3_2024.RDS")
+if(!("try-error" %in% class(scoreboard_d1))){
+  saveRDS(object = scoreboard_d1, file = "data/ncaa_scoreboard_2024.RDS")
+}
+if(!("try-error" %in% class(scoreboard_d2))){
+  saveRDS(object = scoreboard_d2, file = "data/ncaa_scoreboard_D2_2024.RDS")
+}
+if(!("try-error" %in% class(scoreboard_d3))){
+  saveRDS(object = scoreboard_d3, file = "data/ncaa_scoreboard_D3_2024.RDS")
+}
