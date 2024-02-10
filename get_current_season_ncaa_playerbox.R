@@ -76,15 +76,15 @@ get_hitting_box <- function(id){
 }
 
 
-curr_hitting_box_d1 <- readRDS("data/d1_hitting_box_scores_2024.RDS")
-curr_pitching_box_d1 <- readRDS("data/d1_pitching_box_scores_2024.RDS")
+curr_hitting_box_d1 <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2024.RDS"))
+curr_pitching_box_d1 <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_pitching_box_scores_2024.RDS"))
 #curr_fielding_box_d1 <- readRDS("data/d1_fielding_box_scores_2024.RDS")
 
-curr_hitting_box_d2 <- readRDS("data/d2_hitting_box_scores_2024.RDS")
-curr_pitching_box_d2 <- readRDS("data/d2_pitching_box_scores_2024.RDS")
+curr_hitting_box_d2 <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2024.RDS"))
+curr_pitching_box_d2 <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_pitching_box_scores_2024.RDS"))
 
-curr_hitting_box_d3 <- readRDS("data/d3_hitting_box_scores_2024.RDS")
-curr_pitching_box_d3 <- readRDS("data/d3_pitching_box_scores_2024.RDS")
+curr_hitting_box_d3 <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2024.RDS"))
+curr_pitching_box_d3 <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_pitching_box_scores_2024.RDS"))
 
 
 url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2024.RDS?raw=true")
@@ -114,20 +114,9 @@ scoreboard_d3 <- try(readRDS(con), silent = TRUE) %>%
   distinct(game_id, game_date)
 
 
-most_recent_d1 <- min(c(max(anydate(curr_hitting_box_d1$game_date)),
-                     max(anydate(curr_pitching_box_d1$game_date))))
-
-most_recent_d2 <- min(c(max(anydate(curr_hitting_box_d2$game_date)),
-                        max(anydate(curr_pitching_box_d2$game_date))))
-
-
-most_recent_d3 <- min(c(max(anydate(curr_hitting_box_d3$game_date)),
-                        max(anydate(curr_pitching_box_d3$game_date))))
-
-
-game_ids_d1 <- scoreboard_d1 %>% filter(anydate(game_date) > most_recent_d1) %>%  pull(game_id) %>% sort
-game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent_d2) %>%  pull(game_id) %>% sort
-game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent_d3) %>%  pull(game_id) %>% sort
+game_ids_d1 <- scoreboard_d1 %>%  pull(game_id) %>% sort
+game_ids_d2 <- scoreboard_d2 %>%  pull(game_id) %>% sort
+game_ids_d3 <- scoreboard_d3 %>%  pull(game_id) %>% sort
 
 get_ncaa_hitter_player_box <- function(game_id){
 
