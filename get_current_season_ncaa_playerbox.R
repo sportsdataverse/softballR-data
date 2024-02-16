@@ -188,8 +188,6 @@ if(!(is.null(box))){
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
     merge(scoreboard_d3, by = "game_id") %>% 
     mutate(season = 2024) %>% 
-    select(-bb) %>% 
-    rename(bb = bb_2) %>% 
     select(player, pos, g, rbi, ab, r, h, x2b, x3b, tb, hr, ibb, bb, hbp, sf, sh, k, kl, dp, gdp, tp, sb, cs, picked, go, fo, team, opponent, game_id, game_date, season) %>% 
     mutate(across(3:26, as.numeric))  
   
@@ -208,8 +206,6 @@ if(!(is.null(box))){
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
     merge(scoreboard_d1, by = "game_id") %>% 
     mutate(season = 2024) %>% 
-    select(-bb) %>% 
-    rename(bb = bb_2) %>% 
     select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
     mutate(across(5:14, as.numeric))
   
@@ -227,8 +223,6 @@ if(!(is.null(box))){
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
     merge(scoreboard_d2, by = "game_id") %>% 
     mutate(season = 2024) %>% 
-    select(-bb) %>% 
-    rename(bb = bb_2) %>% 
     select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
     mutate(across(5:14, as.numeric))
   
@@ -247,8 +241,6 @@ if(!(is.null(box))){
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
     merge(scoreboard_d3, by = "game_id") %>% 
     mutate(season = 2024) %>% 
-    select(-bb) %>% 
-    rename(bb = bb_2) %>% 
     select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
     mutate(across(5:14, as.numeric))
   
