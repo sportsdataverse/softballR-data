@@ -16,63 +16,65 @@ library(glue)
 options(warn = -1)
 
 get_pitching_box <- function(id){
-
+  
   raw <- glue::glue("https://stats.ncaa.org/contests/{id}/box_score") %>%
     readLines()
-
-  pitching_id <- raw[grep("\t   <a href=\"/game/box_score/", raw)] %>%
-    stringr::str_remove_all("\t   <a href=\"/game/box_score/|\">Box Score </a>")
-
-  raw <- glue::glue("https://stats.ncaa.org/game/box_score/{pitching_id}?year_stat_category_id=15061") %>%
+  
+  pitching_url <- raw[grep("Pitching", raw)] %>% 
+    trimws() %>% 
+    stringr::str_remove_all("\\<a href=\"|\"\\>Pitching\\</a\\>  &nbsp;\\|") %>% 
+    paste0("https://stats.ncaa.org/", .)
+  
+  raw <- pitching_url %>%
     rvest::read_html() %>%
     rvest::html_table()
-
+  
   first_team <- as.character(raw[[6]][1,1])
   second_team <- as.character(raw[[7]][1,1])
-
+  
   upd <- rbind(raw[[6]],raw[[7]]) %>%
     `names<-`(raw[[6]][2,]) %>%
     janitor::clean_names() %>%
     dplyr::filter(!(player %in% c(first_team, second_team,"Player","Totals")))
-
+  
   upd$team <- ifelse(upd$player %in% raw[[6]]$X1, first_team, second_team)
   upd$opponent <- ifelse(upd$team == first_team, second_team, first_team)
   upd[upd == ""] <- "0"
   upd[] <- lapply(upd, gsub, pattern="/", replacement="")
-
+  
   upd <- upd %>%
-    dplyr::mutate(across(3:26, as.numeric)) %>%
+    dplyr::mutate(across(3:35, as.numeric)) %>%
     dplyr::filter(ip > 0) %>%
     dplyr::mutate(game_id = id)
-
+  
   return(upd)
-
+  
 }
 
 get_hitting_box <- function(id){
-
+  
   raw <- glue::glue("https://stats.ncaa.org/contests/{id}/box_score") %>%
     rvest::read_html() %>%
     rvest::html_table()
-
+  
   first_team <- as.character(raw[[6]][1,1])
   second_team <- as.character(raw[[7]][1,1])
-
+  
   upd <- rbind(raw[[6]],raw[[7]]) %>%
     `names<-`(raw[[6]][2,]) %>%
     janitor::clean_names() %>%
     dplyr::filter(!(player %in% c(first_team, second_team,"Player","Totals")))
-
+  
   upd$team <- ifelse(upd$player %in% raw[[6]]$X1, first_team, second_team)
   upd$opponent <- ifelse(upd$team == first_team, second_team, first_team)
   upd[upd == ""] <- "0"
-
+  
   upd <- upd %>%
-    dplyr::mutate(across(3:26, as.numeric)) %>%
+    dplyr::mutate(across(.cols = 3:76, .fns = \(col) as.numeric(str_remove(col, "/")))) %>%
     dplyr::mutate(game_id = id)
-
+  
   return(upd)
-
+  
 }
 
 
