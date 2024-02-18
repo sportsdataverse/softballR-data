@@ -104,10 +104,13 @@ on.exit(close(con))
 scoreboard_d3 <- try(readRDS(con), silent = TRUE) %>%
   distinct(game_id, game_date)
 
+most_recent_d1 <- max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2024.RDS")) %>% pull(game_date)))
+most_recent_d2 <- max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2024.RDS")) %>% pull(game_date)))
+most_recent_d3 <- max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2024.RDS")) %>% pull(game_date)))
 
-game_ids_d1 <- scoreboard_d1 %>%  pull(game_id) %>% sort
-game_ids_d2 <- scoreboard_d2 %>%  pull(game_id) %>% sort
-game_ids_d3 <- scoreboard_d3 %>%  pull(game_id) %>% sort
+game_ids_d1 <- scoreboard_d1 %>% filter(anydate(game_date) > most_recent_d1) %>% pull(game_id) %>% sort
+game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent_d2) %>% pull(game_id) %>% sort
+game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent_d3) %>% pull(game_id) %>% sort
 
 get_ncaa_hitter_player_box <- function(game_id){
 
@@ -145,7 +148,6 @@ i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_hitter_player_box))
 
-
 if(!(is.null(box))){
   
   box <- box %>%
@@ -157,14 +159,13 @@ if(!(is.null(box))){
     select(player, pos, g, rbi, ab, r, h, x2b, x3b, tb, hr, ibb, bb, hbp, sf, sh, k, kl, dp, gdp, tp, sb, cs, picked, go, fo, team, opponent, game_id, game_date, season) %>% 
     mutate(across(3:26, as.numeric))
   
-  saveRDS(object = box, file = "data/D1_hitting_box_scores_2024.RDS")
+  saveRDS(object = rbind(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2024.RDS")), box), file = "data/d1_hitting_box_scores_2024.RDS")
 }
 
 
 i <- 0
 
 box <- do.call(rbind, lapply(X = game_ids_d2, FUN = get_ncaa_hitter_player_box))
-
 
 if(!(is.null(box))){
   
@@ -177,7 +178,7 @@ if(!(is.null(box))){
     select(player, pos, g, rbi, ab, r, h, x2b, x3b, tb, hr, ibb, bb, hbp, sf, sh, k, kl, dp, gdp, tp, sb, cs, picked, go, fo, team, opponent, game_id, game_date, season) %>% 
     mutate(across(3:26, as.numeric))  
 
-  saveRDS(object = box, file = "data/D2_hitting_box_scores_2024.RDS")
+  saveRDS(object = rbind(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2024.RDS")), box), file = "data/d2_hitting_box_scores_2024.RDS")
 }
 
 i <- 0
@@ -193,7 +194,7 @@ if(!(is.null(box))){
     select(player, pos, g, rbi, ab, r, h, x2b, x3b, tb, hr, ibb, bb, hbp, sf, sh, k, kl, dp, gdp, tp, sb, cs, picked, go, fo, team, opponent, game_id, game_date, season) %>% 
     mutate(across(3:26, as.numeric))  
   
-  saveRDS(object = box, file = "data/D3_hitting_box_scores_2024.RDS")
+  saveRDS(object = rbind(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2024.RDS")), box), file = "data/d3_hitting_box_scores_2024.RDS")
 }
 
 # Pitcher box scores
@@ -211,8 +212,8 @@ if(!(is.null(box))){
     select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
     mutate(across(5:14, as.numeric))
   
-  saveRDS(object = box, file = "data/D1_pitching_box_scores_2024.RDS")
-
+  saveRDS(object = rbind(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_pitching_box_scores_2024.RDS")), box), file = "data/d1_pitching_box_scores_2024.RDS")
+  
 }
 
 i <- 0
@@ -229,7 +230,7 @@ if(!(is.null(box))){
     mutate(across(5:14, as.numeric))
   
   
-  saveRDS(object = box, file = "data/D2_pitching_box_scores_2024.RDS")
+  saveRDS(object = rbind(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_pitching_box_scores_2024.RDS")), box), file = "data/d2_pitching_box_scores_2024.RDS")
 }
 
 
@@ -246,5 +247,5 @@ if(!(is.null(box))){
     select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
     mutate(across(5:14, as.numeric))
   
-  saveRDS(object = box, file = "data/D3_pitching_box_scores_2024.RDS")
+  saveRDS(object = rbind(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_pitching_box_scores_2024.RDS")), box), file = "data/d3_pitching_box_scores_2024.RDS")
 }
