@@ -113,7 +113,9 @@ game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent_d2) %>%
 game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent_d3) %>% pull(game_id) %>% sort
 
 get_ncaa_hitter_player_box <- function(game_id){
-
+  
+  print(i)
+  
   i <<- i + 1
 
   hitting <- try(get_hitting_box(game_id))
@@ -123,22 +125,14 @@ get_ncaa_hitter_player_box <- function(game_id){
 }
 
 get_ncaa_pitcher_player_box <- function(game_id){
-
+  
+  print(i)
+  
   i <<- i + 1
 
   pitching <- try(get_pitching_box(game_id))
 
   return(pitching)
-
-}
-
-get_ncaa_fielding_player_box <- function(game_id){
-
-  i <<- i + 1
-
-  fielding <- try(get_fielding_box(game_id))
-
-  return(fielding)
 
 }
 
@@ -249,3 +243,4 @@ if(!(is.null(box))){
   
   saveRDS(object = rbind(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_pitching_box_scores_2024.RDS")), box), file = "data/d3_pitching_box_scores_2024.RDS")
 }
+
