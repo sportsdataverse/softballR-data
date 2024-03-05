@@ -117,8 +117,8 @@ scoreboard_d2$in_box <- scoreboard_d2$game_id %in% d2_hitting_box$game_id
 scoreboard_d3$in_box <- scoreboard_d3$game_id %in% d3_hitting_box$game_id
 
 game_ids_d1 <- scoreboard_d1 %>% filter(anydate(game_date) > most_recent_d1 | !in_box) %>% pull(game_id) %>% sort
-game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent_d2 | !in_box) %>% pull(game_id) %>% sort
-game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent_d3 | !in_box) %>% pull(game_id) %>% sort
+game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent_d2) %>% pull(game_id) %>% sort
+game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent_d3) %>% pull(game_id) %>% sort
 
 get_ncaa_hitter_player_box <- function(game_id){
   
