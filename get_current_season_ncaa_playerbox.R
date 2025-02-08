@@ -16,71 +16,79 @@ library(glue)
 options(warn = -1)
 
 get_pitching_box <- function(id){
-  
-  raw <- glue::glue("https://stats.ncaa.org/contests/{id}/box_score") %>%
-    readLines()
-  
-  pitching_url <- raw[grep("Pitching", raw)] %>% 
-    trimws() %>% 
-    stringr::str_remove_all("\\<a href=\"|\"\\>Pitching\\</a\\>  &nbsp;\\|") %>% 
-    paste0("https://stats.ncaa.org/", .)
-  
-  raw <- pitching_url %>%
+
+  raw <- glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats") %>%
     rvest::read_html() %>%
     rvest::html_table()
-  
-  first_team <- as.character(raw[[6]][1,1])
-  second_team <- as.character(raw[[7]][1,1])
-  
+
+  first_team <- as.character(raw[[2]][2,1])
+  second_team <- as.character(raw[[2]][3,1])
+  date <- as.character(raw[[2]][4,1])
+
   upd <- rbind(raw[[6]],raw[[7]]) %>%
-    `names<-`(raw[[6]][2,]) %>%
     janitor::clean_names() %>%
+    dplyr::rename(player = name) %>%
     dplyr::filter(!(player %in% c(first_team, second_team,"Player","Totals")))
-  
-  upd$team <- ifelse(upd$player %in% raw[[6]]$X1, first_team, second_team)
+
+  upd$team <- ifelse(upd$player %in% raw[[6]]$Name, first_team, second_team)
   upd$opponent <- ifelse(upd$team == first_team, second_team, first_team)
   upd[upd == ""] <- "0"
   upd[] <- lapply(upd, gsub, pattern="/", replacement="")
-  
+
+  cols = c("game_id", "team", "opponent", "player", "ip", "ha", "er", "bb", "hb", "so", "bf", "hr_a", "season")
+
   upd <- upd %>%
-    dplyr::mutate(across(3:35, as.numeric)) %>%
-    dplyr::filter(ip > 0) %>%
-    dplyr::mutate(game_id = id)
-  
+    dplyr::mutate(game_id = game_id, season = 2024) %>%
+    dplyr::select(cols) %>%
+    dplyr::mutate(across(5:12, as.numeric)) %>%
+    dplyr::filter(ip > 0)
+
   return(upd)
-  
+
 }
 
 get_hitting_box <- function(id){
-  
-  raw <- glue::glue("https://stats.ncaa.org/contests/{id}/box_score") %>%
+
+  raw <- glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats") %>%
     rvest::read_html() %>%
     rvest::html_table()
-  
-  first_team <- as.character(raw[[6]][1,1])
-  second_team <- as.character(raw[[7]][1,1])
-  
-  upd <- rbind(raw[[6]],raw[[7]]) %>%
-    `names<-`(raw[[6]][2,]) %>%
+
+  first_team <- as.character(raw[[2]][2,1])
+  second_team <- as.character(raw[[2]][3,1])
+  date <- as.character(raw[[2]][4,1])
+
+  upd <- rbind(raw[[4]],raw[[5]]) %>%
     janitor::clean_names() %>%
+    dplyr::rename(player = name) %>%
     dplyr::filter(!(player %in% c(first_team, second_team,"Player","Totals")))
-  
-  upd$team <- ifelse(upd$player %in% raw[[6]]$X1, first_team, second_team)
+
+  upd$team <- ifelse(upd$player %in% raw[[4]]$Name, first_team, second_team)
   upd$opponent <- ifelse(upd$team == first_team, second_team, first_team)
   upd[upd == ""] <- "0"
-  
+
+  cols = c("player", "pos", "g", "rbi", "ab", "r", "h", "x2b", "x3b", "tb", "hr", "ibb", "bb", "hbp", "sf", "sh", "k", "dp", "sb", "cs", "picked", "team", "opponent", "game_id", "game_date", "season")
+
   upd <- upd %>%
-    dplyr::mutate(across(.cols = 3:76, .fns = \(col) as.numeric(str_remove(col, "/")))) %>%
-    dplyr::mutate(game_id = id)
-  
+    dplyr::rename(pos = p) %>%
+    dplyr::mutate(g = 1, game_date = date, season = 2024, game_id = game_id) %>%
+    dplyr::select(cols) %>%
+    dplyr::mutate(across(.cols = 3:20, .fns = \(col) as.numeric(str_remove(col, "/"))))
+
   return(upd)
-  
+
 }
 
 
+<<<<<<< Updated upstream
 url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2025.RDS?raw=true")
 url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D2_2025.RDS?raw=true")
 url_d3 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D3_2025.RDS?raw=true")
+=======
+
+url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2024.RDS?raw=true")
+url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D2_2024.RDS?raw=true")
+url_d3 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D3_2024.RDS?raw=true")
+>>>>>>> Stashed changes
 
 
 con <- url(url_d1)
@@ -121,9 +129,9 @@ game_ids_d2 <- scoreboard_d2 %>% filter(anydate(game_date) > most_recent_d2) %>%
 game_ids_d3 <- scoreboard_d3 %>% filter(anydate(game_date) > most_recent_d3) %>% pull(game_id) %>% sort
 
 get_ncaa_hitter_player_box <- function(game_id){
-  
+
   print(i)
-  
+
   i <<- i + 1
 
   hitting <- try(get_hitting_box(game_id))
@@ -133,9 +141,9 @@ get_ncaa_hitter_player_box <- function(game_id){
 }
 
 get_ncaa_pitcher_player_box <- function(game_id){
-  
+
   print(i)
-  
+
   i <<- i + 1
 
   pitching <- try(get_pitching_box(game_id))
@@ -150,18 +158,19 @@ i <- 0
 
 prev_box <- d1_hitting_box
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_hitter_player_box))
+hitting_cols <- c("player", "pos", "g", "rbi", "ab", "r", "h", "x2b", "x3b", "tb", "hr", "ibb", "bb", "hbp", "sf", "sh", "k", "dp", "sb", "cs", "picked", "team", "opponent", "game_id", "game_date", "season")
 
 if(!(is.null(box))){
-  
+
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-    merge(scoreboard_d1, by = "game_id") %>% 
-    mutate(season = 2024) %>% 
-    select(-bb) %>% 
-    rename(bb = bb_2) %>% 
-    select(player, pos, g, rbi, ab, r, h, x2b, x3b, tb, hr, ibb, bb, hbp, sf, sh, k, kl, dp, gdp, tp, sb, cs, picked, go, fo, team, opponent, game_id, game_date, season) %>% 
-    mutate(across(3:26, as.numeric))
-  
+    merge(scoreboard_d1, by = "game_id") %>%
+    mutate(season = 2024) %>%
+    select(-bb) %>%
+    rename(bb = bb_2) %>%
+    select(hitting_cols) %>%
+    mutate(across(3:20, as.numeric))
+
   saveRDS(object = rbind(prev_box, box), file = "data/d1_hitting_box_scores_2024.RDS")
 }
 
@@ -172,15 +181,15 @@ prev_box <- d2_hitting_box
 box <- do.call(rbind, lapply(X = game_ids_d2, FUN = get_ncaa_hitter_player_box))
 
 if(!(is.null(box))){
-  
+
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-    merge(scoreboard_d2, by = "game_id") %>% 
-    mutate(season = 2024) %>% 
-    select(-bb) %>% 
-    rename(bb = bb_2) %>% 
-    select(player, pos, g, rbi, ab, r, h, x2b, x3b, tb, hr, ibb, bb, hbp, sf, sh, k, kl, dp, gdp, tp, sb, cs, picked, go, fo, team, opponent, game_id, game_date, season) %>% 
-    mutate(across(3:26, as.numeric))  
+    merge(scoreboard_d2, by = "game_id") %>%
+    mutate(season = 2024) %>%
+    select(-bb) %>%
+    rename(bb = bb_2) %>%
+    select(hitting_cols) %>%
+    mutate(across(3:20, as.numeric))
 
   saveRDS(object = rbind(prev_box, box), file = "data/d2_hitting_box_scores_2024.RDS")
 }
@@ -191,14 +200,14 @@ box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_hitter_player_box))
 
 prev_box <- d3_hitting_box
 if(!(is.null(box))){
-  
+
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-    merge(scoreboard_d3, by = "game_id") %>% 
-    mutate(season = 2024) %>% 
-    select(player, pos, g, rbi, ab, r, h, x2b, x3b, tb, hr, ibb, bb, hbp, sf, sh, k, kl, dp, gdp, tp, sb, cs, picked, go, fo, team, opponent, game_id, game_date, season) %>% 
-    mutate(across(3:26, as.numeric))  
-  
+    merge(scoreboard_d3, by = "game_id") %>%
+    mutate(season = 2024) %>%
+    select(hitting_cols) %>%
+    mutate(across(3:20, as.numeric))
+
   saveRDS(object = rbind(prev_box, box), file = "data/d3_hitting_box_scores_2024.RDS")
 }
 
@@ -220,18 +229,19 @@ i <- 0
 
 prev_box <- d1_pitching_box
 box <- do.call(rbind, lapply(X = game_ids_d1, FUN = get_ncaa_pitcher_player_box))
+pitching_cols <- c("game_id", "team", "opponent", "player", "ip", "ha", "er", "bb", "hb", "so", "bf", "hr_a", "season")
 
 if(!(is.null(box))){
 
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-    merge(scoreboard_d1, by = "game_id") %>% 
-    mutate(season = 2024) %>% 
-    select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
-    mutate(across(5:14, as.numeric))
-  
+    merge(scoreboard_d1, by = "game_id") %>%
+    mutate(season = 2024) %>%
+    select(pitching_cols) %>%
+    mutate(across(5:12, as.numeric))
+
   saveRDS(object = rbind(prev_box, box), file = "data/d1_pitching_box_scores_2024.RDS")
-  
+
 }
 
 i <- 0
@@ -240,15 +250,15 @@ prev_box <- d1_pitching_box
 box <- do.call(rbind, lapply(X = game_ids_d2, FUN = get_ncaa_pitcher_player_box))
 
 if(!(is.null(box))){
-  
+
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-    merge(scoreboard_d2, by = "game_id") %>% 
-    mutate(season = 2024) %>% 
-    select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
-    mutate(across(5:14, as.numeric))
-  
-  
+    merge(scoreboard_d2, by = "game_id") %>%
+    mutate(season = 2024) %>%
+    select(pitching_cols) %>%
+    mutate(across(5:12, as.numeric))
+
+
   saveRDS(object = rbind(prev_box, box), file = "data/d2_pitching_box_scores_2024.RDS")
 }
 
@@ -262,11 +272,11 @@ box <- do.call(rbind, lapply(X = game_ids_d3, FUN = get_ncaa_pitcher_player_box)
 if(!(is.null(box))){
   box <- box %>%
     filter(!str_detect(player,"Error : Document is empty|subscript out of bounds|Timeout was reached")) %>%
-    merge(scoreboard_d3, by = "game_id") %>% 
-    mutate(season = 2024) %>% 
-    select(game_id, team, opponent, player, ip, ha, er, bb, hb, so, bf, hr_a, go, fo, season) %>% 
-    mutate(across(5:14, as.numeric))
-  
+    merge(scoreboard_d3, by = "game_id") %>%
+    mutate(season = 2024) %>%
+    select(pitching_cols) %>%
+    mutate(across(5:12, as.numeric))
+
   saveRDS(object = rbind(prev_box, box), file = "data/d3_pitching_box_scores_2024.RDS")
 }
 
