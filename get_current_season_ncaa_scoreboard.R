@@ -32,7 +32,8 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
     
   }
   
-  division_id <- dplyr::case_when(division == "D1" & year == 2024 ~ 18261,
+  division_id <- dplyr::case_when(division == "D1" & year == 2025 ~ 18503,
+                                  division == "D1" & year == 2024 ~ 18261,
                                   division == "D1" & year == 2023 ~ 18101,
                                   division == "D1" & year == 2022 ~ 17840,
                                   division == "D1" & year == 2021 ~ 17540,
@@ -41,6 +42,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
                                   division == "D1" & year == 2018 ~ 15196,
                                   division == "D1" & year == 2017 ~ 13300,
                                   division == "D1" & year == 2016 ~ 12981,
+                                  division == "D2" & year == 2025 ~ 18504,
                                   division == "D2" & year == 2024 ~ 18264,
                                   division == "D2" & year == 2023 ~ 18102,
                                   division == "D2" & year == 2022 ~ 17841,
@@ -50,6 +52,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
                                   division == "D2" & year == 2018 ~ 15197,
                                   division == "D2" & year == 2017 ~ 13301,
                                   division == "D2" & year == 2016 ~ 12980,
+                                  division == "D3" & year == 2025 ~ 18505,
                                   division == "D3" & year == 2024 ~ 18265,
                                   division == "D3" & year == 2023 ~ 18103,
                                   division == "D3" & year == 2022 ~ 17842,
@@ -171,13 +174,13 @@ ncaa_softball_season_scoreboard <- function(season, division = "D1"){
 
   s <- try(as.numeric(season))
 
-  if("try-error" %in% class(s) || is.na(s) || s < 2017 || s > 2024){
+  if("try-error" %in% class(s) || is.na(s) || s < 2017 || s > 2025){
     stop("Invalid Season")
   }
 
-  seasons <- data.frame(season = 2015:2024,
-                        start_date = c("2015-02-05","2016-02-11","2017-02-09","2018-02-08","2019-02-07","2020-02-06","2021-02-11","2022-02-10","2023-02-09", "2024-02-08"),
-                        end_date = c("2015-06-03","2016-06-08","2017-06-07","2018-06-06","2019-06-04","2020-03-12","2021-06-10","2022-06-09","2023-06-09", "2024-06-09")) #Go back and fix after season
+  seasons <- data.frame(season = 2015:2025,
+                        start_date = c("2015-02-05","2016-02-11","2017-02-09","2018-02-08","2019-02-07","2020-02-06","2021-02-11","2022-02-10","2023-02-09", "2024-02-08", "2025-02-04"),
+                        end_date = c("2015-06-03","2016-06-08","2017-06-07","2018-06-06","2019-06-04","2020-03-12","2021-06-10","2022-06-09","2023-06-09", "2024-06-06", "2025-06-09")) #Go back and fix after season
 
   start_date <- seasons %>% dplyr::filter(season == s) %>% dplyr::select(start_date) %>% as.character() %>% as.Date()
   end_date <- seasons %>% dplyr::filter(season == s) %>% dplyr::select(end_date) %>% as.character() %>% as.Date()
@@ -193,18 +196,18 @@ ncaa_softball_season_scoreboard <- function(season, division = "D1"){
 }
 
 
-scoreboard_d1 <- try(ncaa_softball_season_scoreboard(season = 2024, division = "D1"))
+scoreboard_d1 <- try(ncaa_softball_season_scoreboard(season = 2025, division = "D1"))
 
-scoreboard_d2 <- try(ncaa_softball_season_scoreboard(season = 2024, division = "D2"))
+scoreboard_d2 <- try(ncaa_softball_season_scoreboard(season = 2025, division = "D2"))
 
-scoreboard_d3 <- try(ncaa_softball_season_scoreboard(season = 2024, division = "D3"))
+scoreboard_d3 <- try(ncaa_softball_season_scoreboard(season = 2025, division = "D3"))
 
 if(!("try-error" %in% class(scoreboard_d1))){
-  saveRDS(object = scoreboard_d1, file = "data/ncaa_scoreboard_2024.RDS")
+  saveRDS(object = scoreboard_d1, file = "data/ncaa_scoreboard_2025.RDS")
 }
 if(!("try-error" %in% class(scoreboard_d2))){
-  saveRDS(object = scoreboard_d2, file = "data/ncaa_scoreboard_D2_2024.RDS")
+  saveRDS(object = scoreboard_d2, file = "data/ncaa_scoreboard_D2_2025.RDS")
 }
 if(!("try-error" %in% class(scoreboard_d3))){
-  saveRDS(object = scoreboard_d3, file = "data/ncaa_scoreboard_D3_2024.RDS")
+  saveRDS(object = scoreboard_d3, file = "data/ncaa_scoreboard_D3_2025.RDS")
 }

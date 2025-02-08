@@ -78,9 +78,9 @@ get_hitting_box <- function(id){
 }
 
 
-url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2024.RDS?raw=true")
-url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D2_2024.RDS?raw=true")
-url_d3 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D3_2024.RDS?raw=true")
+url_d1 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_2025.RDS?raw=true")
+url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D2_2025.RDS?raw=true")
+url_d3 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D3_2025.RDS?raw=true")
 
 
 con <- url(url_d1)
