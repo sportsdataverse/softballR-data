@@ -104,13 +104,13 @@ on.exit(close(con))
 scoreboard_d3 <- try(readRDS(con), silent = TRUE) %>%
   distinct(game_id, game_date)
 
-most_recent_d1 <- max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2024.RDS")) %>% pull(game_date)))
-most_recent_d2 <- max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2024.RDS")) %>% pull(game_date)))
-most_recent_d3 <- max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2024.RDS")) %>% pull(game_date)))
+most_recent_d1 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
+most_recent_d2 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
+most_recent_d3 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
 
-d1_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2024.RDS"))
-d2_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2024.RDS"))
-d3_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2024.RDS"))
+d1_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2025.RDS"))
+d2_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2025.RDS"))
+d3_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2025.RDS"))
 
 scoreboard_d1$in_box <- scoreboard_d1$game_id %in% d1_hitting_box$game_id
 scoreboard_d2$in_box <- scoreboard_d2$game_id %in% d2_hitting_box$game_id
@@ -204,9 +204,9 @@ if(!(is.null(box))){
 
 # Pitcher box scores
 
-d1_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_pitching_box_scores_2024.RDS"))
-d2_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_pitching_box_scores_2024.RDS"))
-d3_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_pitching_box_scores_2024.RDS"))
+d1_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_pitching_box_scores_2025.RDS"))
+d2_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_pitching_box_scores_2025.RDS"))
+d3_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_pitching_box_scores_2025.RDS"))
 
 scoreboard_d1$in_box <- scoreboard_d1$game_id %in% d1_pitching_box$game_id
 scoreboard_d2$in_box <- scoreboard_d2$game_id %in% d2_pitching_box$game_id
