@@ -84,7 +84,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
     game_date <- game_vec[grep("<td rowspan=\"2\" valign=\"middle\">", game_vec)[1] + 1] %>%
       trimws()
     
-    away_team <- game_vec[grep("<img height=\"20px\" width=\"30px\" alt=\"",game_vec)[1]] %>%
+    away_team <- game_vec[grep("<img ",game_vec)[1]] %>%
       strsplit("alt=\"|\" src=\"") %>%
       magrittr::extract2(1) %>%
       magrittr::extract(2)
@@ -94,7 +94,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
       magrittr::extract2(1) %>%
       magrittr::extract(2)
     
-    away_team_logo <- game_vec[grep("<img height=\"20px\" width=\"30px\" alt=\"",game_vec)[1]] %>%
+    away_team_logo <- game_vec[grep("<img ",game_vec)[1]] %>%
       strsplit("alt=\"|\" src=\"") %>%
       magrittr::extract2(1) %>%
       magrittr::extract(3) %>%
@@ -103,7 +103,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
     away_team_runs <- game_vec[grep("<div id=\"score_", game_vec)[1] + 1] %>%
       trimws()
     
-    home_team <- game_vec[grep("<img height=\"20px\" width=\"30px\" alt=\"",game_vec)[2]] %>%
+    home_team <- game_vec[grep("<img ",game_vec)[2]] %>%
       strsplit("alt=\"|\" src=\"") %>%
       magrittr::extract2(1) %>%
       magrittr::extract(2)
@@ -113,7 +113,7 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
       magrittr::extract2(1) %>%
       magrittr::extract(2)
     
-    home_team_logo <- game_vec[grep("<img height=\"20px\" width=\"30px\" alt=\"",game_vec)[2]] %>%
+    home_team_logo <- game_vec[grep("<img ",game_vec)[2]] %>%
       strsplit("alt=\"|\" src=\"") %>%
       magrittr::extract2(1) %>%
       magrittr::extract(3) %>%
