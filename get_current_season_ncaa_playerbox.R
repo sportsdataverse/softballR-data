@@ -97,25 +97,25 @@ url_d3 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/dat
 
 
 con <- url(url_d1)
-
-on.exit(close(con))
-
-scoreboard_d1 <- try(readRDS(con), silent = TRUE) %>%
-  distinct(game_id, game_date)
+scoreboard_d1 <- tryCatch({
+  readRDS(con)
+}, finally = {
+  close(con)
+}) %>% distinct(game_id, game_date)
 
 con <- url(url_d2)
-
-on.exit(close(con))
-
-scoreboard_d2 <- try(readRDS(con), silent = TRUE) %>%
-  distinct(game_id, game_date)
+scoreboard_d2 <- tryCatch({
+  readRDS(con)
+}, finally = {
+  close(con)
+}) %>% distinct(game_id, game_date)
 
 con <- url(url_d3)
-
-on.exit(close(con))
-
-scoreboard_d3 <- try(readRDS(con), silent = TRUE) %>%
-  distinct(game_id, game_date)
+scoreboard_d3 <- tryCatch({
+  readRDS(con)
+}, finally = {
+  close(con)
+}) %>% distinct(game_id, game_date)
 
 most_recent_d1 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
 most_recent_d2 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
