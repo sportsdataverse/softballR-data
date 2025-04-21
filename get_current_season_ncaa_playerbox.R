@@ -17,10 +17,18 @@ options(warn = -1)
 
 get_pitching_box <- function(id){
 
-  raw <- glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats") %>%
-    rvest::read_html() %>%
-    rvest::html_table()
+  raw <- tryCatch({
+    con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"))
+    on.exit(close(con), add = TRUE)
   
+    con %>%
+      read_html() %>%
+      html_table()
+  }, error = function(e) {
+    message("Error loading game ID ", id, ": ", e$message)
+    data.frame()
+  })
+    
   if(length(raw) == 0){
     return(data.frame())
   }
@@ -53,9 +61,17 @@ get_pitching_box <- function(id){
 
 get_hitting_box <- function(id){
 
-  raw <- glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats") %>%
-    rvest::read_html() %>%
-    rvest::html_table()
+  raw <- tryCatch({
+    con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"))
+    on.exit(close(con), add = TRUE)
+  
+    con %>%
+      read_html() %>%
+      html_table()
+  }, error = function(e) {
+    message("Error loading game ID ", id, ": ", e$message)
+    data.frame()
+  })
   
   if(length(raw) == 0){
     return(data.frame())
