@@ -19,12 +19,21 @@ get_pitching_box <- function(id){
 
   raw <- tryCatch({
     con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"))
-    on.exit(close(con), add = TRUE)
   
-    con %>%
+    # Open the connection explicitly
+    open(con)
+  
+    # Read, then close
+    result <- con %>%
       read_html() %>%
       html_table()
+  
+    close(con)
+  
+    result
   }, error = function(e) {
+    # Fallback if anything fails
+    if (exists("con") && inherits(con, "connection") && isOpen(con)) close(con)
     message("Error loading game ID ", id, ": ", e$message)
     data.frame()
   })
@@ -63,12 +72,21 @@ get_hitting_box <- function(id){
 
   raw <- tryCatch({
     con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"))
-    on.exit(close(con), add = TRUE)
   
-    con %>%
+    # Open the connection explicitly
+    open(con)
+  
+    # Read, then close
+    result <- con %>%
       read_html() %>%
       html_table()
+  
+    close(con)
+  
+    result
   }, error = function(e) {
+    # Fallback if anything fails
+    if (exists("con") && inherits(con, "connection") && isOpen(con)) close(con)
     message("Error loading game ID ", id, ": ", e$message)
     data.frame()
   })
