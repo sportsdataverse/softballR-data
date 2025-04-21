@@ -18,7 +18,7 @@ options(warn = -1)
 get_pitching_box <- function(id){
 
   raw <- tryCatch({
-    con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"))
+    con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"), open = "rb")
   
     # Open the connection explicitly
     open(con)
@@ -71,7 +71,7 @@ get_pitching_box <- function(id){
 get_hitting_box <- function(id){
 
   raw <- tryCatch({
-    con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"))
+    con <- url(glue::glue("https://stats.ncaa.org/contests/{id}/individual_stats"), open = "rb")
   
     # Open the connection explicitly
     open(con)
