@@ -13,6 +13,9 @@ library(anytime)
 install.packages("glue")
 library(glue)
 
+install.packages("rio")
+library(rio)
+
 options(warn = -1)
 
 get_pitching_box <- function(id){
@@ -130,30 +133,32 @@ url_d2 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/dat
 url_d3 <- glue::glue("https://github.com/tmking2002/softballR-data/blob/main/data/ncaa_scoreboard_D3_2025.RDS?raw=true")
 
 
-con <- url(url_d1)
-scoreboard_d1 <- tryCatch({
-  readRDS(con)
-}, finally = {
-  close(con)
-}) %>% distinct(game_id, game_date)
+scoreboard_d1 <- rio::import(url_d1) %>% distinct(game_id, game_date)
 
-con <- url(url_d2)
-scoreboard_d2 <- tryCatch({
-  readRDS(con)
-}, finally = {
-  close(con)
-}) %>% distinct(game_id, game_date)
+scoreboard_d2 <- rio::import(url_d2) %>% distinct(game_id, game_date)
 
-con <- url(url_d3)
-scoreboard_d3 <- tryCatch({
-  readRDS(con)
-}, finally = {
-  close(con)
-}) %>% distinct(game_id, game_date)
+scoreboard_d3 <- rio::import(url_d3) %>% distinct(game_id, game_date)
 
-most_recent_d1 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
-most_recent_d2 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
-most_recent_d3 <- try(max(anydate(readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2025.RDS")) %>% pull(game_date))))
+most_recent_d1 <- tryCatch({
+  rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2025.RDS") %>%
+    pull(game_date) %>%
+    anydate() %>%
+    max()
+}, error = function(e) NA)
+
+most_recent_d2 <- tryCatch({
+  rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2025.RDS") %>%
+    pull(game_date) %>%
+    anydate() %>%
+    max()
+}, error = function(e) NA)
+
+most_recent_d3 <- tryCatch({
+  rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2025.RDS") %>%
+    pull(game_date) %>%
+    anydate() %>%
+    max()
+}, error = function(e) NA)
 
 if("try-error" %in% class(most_recent_d1)){
   most_recent_d1 <- "1900-01-01"
@@ -161,9 +166,10 @@ if("try-error" %in% class(most_recent_d1)){
   most_recent_d3 <- "1900-01-01"
 }
 
-d1_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2025.RDS"))
-d2_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2025.RDS"))
-d3_hitting_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2025.RDS"))
+d1_hitting_box <- rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_hitting_box_scores_2025.RDS")
+d2_hitting_box <- rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_hitting_box_scores_2025.RDS")
+d3_hitting_box <- rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_hitting_box_scores_2025.RDS")
+
 
 scoreboard_d1$in_box <- scoreboard_d1$game_id %in% d1_hitting_box$game_id
 scoreboard_d2$in_box <- scoreboard_d2$game_id %in% d2_hitting_box$game_id
@@ -254,9 +260,9 @@ if(!(is.null(box))){
 
 # Pitcher box scores
 
-d1_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_pitching_box_scores_2025.RDS"))
-d2_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_pitching_box_scores_2025.RDS"))
-d3_pitching_box <- readRDS(url("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_pitching_box_scores_2025.RDS"))
+d1_pitching_box <- rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d1_pitching_box_scores_2025.RDS")
+d2_pitching_box <- rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d2_pitching_box_scores_2025.RDS")
+d3_pitching_box <- rio::import("https://github.com/sportsdataverse/softballR-data/raw/main/data/d3_pitching_box_scores_2025.RDS")
 
 scoreboard_d1$in_box <- scoreboard_d1$game_id %in% d1_pitching_box$game_id
 scoreboard_d2$in_box <- scoreboard_d2$game_id %in% d2_pitching_box$game_id
