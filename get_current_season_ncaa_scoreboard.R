@@ -122,11 +122,6 @@ ncaa_softball_scoreboard <- function(date, division = "D1"){
     home_team_runs <- game_vec[grep("<div id=\"score_", game_vec)[2] + 1] %>%
       trimws()
     
-    if(is.na(home_team_runs)){
-      print(game_vec)
-      print(grep("<div id=\"score_", game_vec))
-    }
-    
     status <- game_vec[grep("<div class=\"livestream", game_vec) + 1] %>%
       trimws()
     
