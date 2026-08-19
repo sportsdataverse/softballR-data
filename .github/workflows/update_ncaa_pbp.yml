@@ -1,5 +1,17 @@
 name: update_ncaa_pbp
 
+# Serialize every workflow in this repo that commits to it. Two runs in flight put
+# one of them behind origin and its push is rejected -- and where the git calls
+# are swallowed with no rc check, that lands as a GREEN job that published
+# nothing. Worked examples: wehoop-wnba-data runs 32192069433 + 32192069566, and
+# hoopR-nba-data run 32204419012, all on 2026-08-18/19.
+#
+# cancel-in-progress is FALSE on purpose -- these runs upload release assets, and
+# cancelling mid-upload leaves a tag half-updated. Queue instead.
+concurrency:
+  group: ${{ github.repository }}-commit
+  cancel-in-progress: false
+
 on:
   schedule:
     - cron:  '0 5 * * *'
@@ -11,7 +23,7 @@ jobs:
     env:
       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: r-lib/actions/setup-r@v2
       - name: Update current season NCAA PBP
         run: Rscript get_current_season_ncaa_pbp.R
